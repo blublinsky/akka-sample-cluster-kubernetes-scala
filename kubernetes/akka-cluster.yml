@@ -4,7 +4,7 @@ metadata:
   labels:
     app: appka
   name: appka
-  namespace: appka-1
+  namespace: default
 spec:
   replicas: 3
   selector:
@@ -12,15 +12,17 @@ spec:
       app: appka
   template:
     metadata:
+      annotations:
+        traffic.sidecar.istio.io/excludeOutboundPorts: "2552, 8558"
+        traffic.sidecar.istio.io/excludeInboundPorts: "2552, 8558"
       labels:
         app: appka
         actorSystemName: appka
     spec:
       containers:
       - name: appka
-        image: akka-sample-cluster-kubernetes:latest
-        # remove for real clusters, useful for minikube
-        imagePullPolicy: Never
+        image: lightbend/akka-sample-cluster-kubernetes:latest
+        imagePullPolicy: Always
         readinessProbe:
           httpGet:
             path: /ready
@@ -49,14 +51,20 @@ spec:
             fieldRef:
               fieldPath: metadata.namespace
         - name: REQUIRED_CONTACT_POINT_NR
-          value: "3"
+          value: "1"
+        - name: REMOTING_PORT
+          value: "2552"
+        - name: MANAGEMENT_PORT
+          value: "8558"
+        - name: MANAGEMENT_HOST
+          value: "127.0.0.1"
 
 ---
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: pod-reader
-  namespace: appka-1
+  namespace: default
 rules:
 - apiGroups: [""] # "" indicates the core API group
   resources: ["pods"]
@@ -66,12 +74,12 @@ kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: read-pods
-  namespace: appka-1
+  namespace: default
 subjects:
 # Note the `name` line below. The first default refers to the namespace. The second refers to the service account name.
 # For instance, `name: system:serviceaccount:myns:default` would refer to the default service account in namespace `myns`
 - kind: User
-  name: system:serviceaccount:appka-1:default
+  name: system:serviceaccount:default:default
 roleRef:
   kind: Role
   name: pod-reader

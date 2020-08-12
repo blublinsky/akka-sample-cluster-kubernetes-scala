@@ -9,11 +9,12 @@ import akka.http.scaladsl.server.Directives._
 import akka.management.cluster.bootstrap.ClusterBootstrap
 import akka.management.javadsl.AkkaManagement
 import akka.{ actor => classic }
+import akka.actor.typed.scaladsl.adapter._
+
 
 object DemoApp extends App {
 
   ActorSystem[Nothing](Behaviors.setup[Nothing] { context =>
-    import akka.actor.typed.scaladsl.adapter._
     implicit val classicSystem: classic.ActorSystem = context.system.toClassic
     implicit val ec = context.system.executionContext
 

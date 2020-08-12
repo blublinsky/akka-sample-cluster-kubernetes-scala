@@ -1,11 +1,12 @@
+import sbt._
+import sbt.Keys._
+import Dependencies._
+
 organization in ThisBuild := "com.lightbend"
 
 name := "akka-sample-cluster-kubernetes"
 
-scalaVersion := "2.13.0"
-lazy val akkaHttpVersion = "10.2.0"
-lazy val akkaVersion = "2.6.8"
-lazy val akkaManagementVersion = "1.0.8"
+scalaVersion := "2.12.10"
 
 // make version compatible with docker for publishing
 ThisBuild / dynverSeparator := "-"
@@ -19,27 +20,11 @@ mainClass in (Compile, run) := Some("akka.sample.cluster.kubernetes.DemoApp")
 
 enablePlugins(JavaServerAppPackaging, DockerPlugin)
 
-dockerExposedPorts := Seq(8080, 8558, 25520)
+dockerExposedPorts := Seq(8080, 8558, 2552)
 dockerUpdateLatest := true
-dockerUsername := sys.props.get("docker.username")
-dockerRepository := sys.props.get("docker.registry")
+dockerRepository := Some("lightbend")
 dockerBaseImage := "adoptopenjdk:11-jre-hotspot"
 
-libraryDependencies ++= {
-  Seq(
-    "com.typesafe.akka" %% "akka-http" % akkaHttpVersion,
-    "com.typesafe.akka" %% "akka-http-spray-json" % akkaHttpVersion,
-    "com.typesafe.akka" %% "akka-cluster-typed" % akkaVersion,
-    "com.typesafe.akka" %% "akka-cluster-sharding-typed" % akkaVersion,
-    "com.typesafe.akka" %% "akka-stream-typed" % akkaVersion,
-    "com.typesafe.akka" %% "akka-discovery" % akkaVersion,
-    "ch.qos.logback" % "logback-classic" % "1.2.3",
-    "com.lightbend.akka.discovery" %% "akka-discovery-kubernetes-api" % akkaManagementVersion,
-    "com.lightbend.akka.management" %% "akka-management-cluster-bootstrap" % akkaManagementVersion,
-    "com.lightbend.akka.management" %% "akka-management-cluster-http" % akkaManagementVersion,
-    "com.typesafe.akka" %% "akka-testkit" % akkaVersion % "test",
-    "com.typesafe.akka" %% "akka-actor-testkit-typed" % akkaVersion % Test,
-    "com.typesafe.akka" %% "akka-http-testkit" % akkaHttpVersion % Test,
-    "com.typesafe.akka" %% "akka-testkit" % akkaVersion % Test,
-    "com.typesafe.akka" %% "akka-stream-testkit" % akkaVersion % Test)
-}
+libraryDependencies ++= Seq(akkaHTTP, akkaSpray, akkaCluster, akkaSharding, akkaStreams, akkaDiscovery,
+  akkaDiscoveryK8, akkaBootstrap, akkaManagement, logback)
+
