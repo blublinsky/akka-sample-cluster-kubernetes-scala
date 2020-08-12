@@ -57,7 +57,9 @@ spec:
         - name: MANAGEMENT_PORT
           value: "8558"
         - name: MANAGEMENT_HOST
-          value: "127.0.0.1"
+          value: "0.0.0.0"
+        - name: MANAGEMENT_HOST_BINDING
+          value: "0.0.0.0"
 
 ---
 kind: Role
