@@ -13,7 +13,7 @@ spec:
   template:
     metadata:
       annotations:
-        traffic.sidecar.istio.io/excludeOutboundPorts: "2552, 8558"
+        traffic.sidecar.istio.io/excludeOutboundPorts: "2552, 8558, 443"
         traffic.sidecar.istio.io/excludeInboundPorts: "2552, 8558"
       labels:
         app: appka
@@ -58,9 +58,6 @@ spec:
           value: "8558"
         - name: MANAGEMENT_HOST
           value: "0.0.0.0"
-        - name: MANAGEMENT_HOST_BINDING
-          value: "0.0.0.0"
-
 ---
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
