@@ -23,10 +23,15 @@ First, package the application and make it available locally as a docker image:
 
 Now push it to any registry accessable from cluster - current configuration is using dockerHub
 
-Then `akka-cluster.yml` should be sufficient to deploy a 3-node Akka Cluster
+Then `akka-cluster.yaml` should be sufficient to deploy a 3-node Akka Cluster
 
-    kubectl apply -f kubernetes/akka-cluster.yml
+    kubectl apply -f kubernetes/akka-cluster.yaml
     
+There are 2 ways to make it work with Istio 1.5.x and above:
+* Add port 443 to the excluded outbound ports [akka-cluster-443](kubernetes/akka-cluster-443.yaml)
+* Add API server to the excluded outbond IPs [akka-cluster](kubernetes/akka-cluster.yaml). To find the IP
+of the API server (used here) run `kubectl get svc kubernetes -o jsonpath='{.spec.clusterIP}'`
+
 To test application you can use port forward.
 To see configuration, use port 8558:
 
