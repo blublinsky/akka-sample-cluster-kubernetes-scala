@@ -43,6 +43,9 @@ spec:
         - name: management
           containerPort: 8558
           protocol: TCP
+        - name: akka
+          containerPort: 2552
+          protocol: TCP
         - name: http
           containerPort: 8080
           protocol: TCP
