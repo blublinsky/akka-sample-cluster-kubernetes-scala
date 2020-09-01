@@ -15,6 +15,7 @@ spec:
       annotations:
         traffic.sidecar.istio.io/excludeOutboundPorts: "2552, 8558"
         traffic.sidecar.istio.io/excludeInboundPorts: "2552, 8558"
+        traffic.sidecar.istio.io/excludeOutboundIPRanges: "10.74.0.1/32"
       labels:
         app: appka
         actorSystemName: appka
